@@ -1,23 +1,30 @@
 require 'nokogiri'
 require 'open-uri'
 
-url = 'https://santehnika-online.ru/product/mebel_dlya_vannoy_stworki_montre_60_belaya/'
-# url = 'https://spa-swim.ru/product/bellagio-luxury-cesano'
-# url = 'https://www.santehnica.ru/product/195214.html'
-# url = 'https://shower5.ru/collection/kabiny80x80'
+urls = ['https://santehnika-online.ru/product/mebel_dlya_vannoy_stworki_montre_60_belaya/',
+        'https://spa-swim.ru/product/bellagio-luxury-cesano',
+        'https://www.santehnica.ru/product/195214.html',
+        'https://shower5.ru/collection/kabiny80x80']
 
-html = open(url) { |result| result.read }
-page = Nokogiri::HTML(html)
-
-title = page.css('title').text
-h1 = page.css('h1').text
-nodeset  = page.css('head > meta').map do |node|
- (node["name"] == "description") && node["content"]
+def get_html(url)
+  html = open(url) { |result| result.read }
+  Nokogiri::HTML(html)
 end
 
-description = nodeset.select! { |item| item }
-description = description ? description.join : ''
+urls.each do |url|
+  page = get_html(url)
+  title = page.css('title').text
+  h1 = page.css('h1').text
+  nodeset  = page.css('head > meta').map do |node|
+   (node["name"] == "description") && node["content"]
+  end
 
-puts "Title: #{title}"
-puts "H1: #{h1}"
-puts "Description: #{description}"
+  description = nodeset.select! { |item| item }
+  description = description ? description.join : ''
+
+  puts "Title: #{title}"
+  puts "H1: #{h1}"
+  puts "Description: #{description}"
+  puts "URL: #{url}"
+  puts "=" * 40
+end
