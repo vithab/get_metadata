@@ -24,10 +24,10 @@ urls.each do |category|
   p category_urls
 
   category_urls.each do |url|
-    page = get_html(category)
+    page = get_html(url)
 
     title = page.css('title').text
-    h1 = page.css('h1').text
+    h1 = page.css('h1 > span:nth-child(1)').text
     nodeset  = page.css('head > meta').map do |node|
      (node["name"] == "description") && node["content"]
     end
