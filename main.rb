@@ -4,7 +4,9 @@ require 'byebug'
 
 BASE_URL = 'https://santehnika-online.ru'
 category_urls = []
-urls = ['https://santehnika-online.ru/mebel_dlja_vannoj_komnaty/']
+urls = ['https://santehnika-online.ru/dushevaja_programma/',
+        'https://santehnika-online.ru/vanny/',
+        'https://santehnika-online.ru/mebel_dlja_vannoj_komnaty/']
 
 def get_html(url)
   html = open(url) { |result| result.read }
@@ -14,10 +16,11 @@ end
 urls.each do |category|
   category_urls << category
   page = get_html(category)
-  subcategories = page.css('div.collapse-container.collapse-entered > div >' \
-                  'div > div > div > div > a').map do |a|
-                  BASE_URL + a['href']
-  end
+  subcategories = 
+    page.css('div.collapse-container.collapse-entered div.IQGxwTnhvFUzxWX7lC7D > a')
+      .map do |a|
+        BASE_URL + a['href']
+      end
 
   category_urls = category_urls + subcategories
 
